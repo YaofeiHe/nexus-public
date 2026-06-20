@@ -1,0 +1,197 @@
+{
+  "agents": {
+    "evaluation_agent": "<PROJECT_ROOT>/scripts/lab/evaluate_nexus_case.py",
+    "execution_agent": "<PROJECT_ROOT>/scripts/lab/run_nexus_e2e_case.py",
+    "loop_orchestrator": "<PROJECT_ROOT>/scripts/lab/run_nexus_lab_loop.py",
+    "modification_planner": "<PROJECT_ROOT>/scripts/lab/plan_nexus_modification.py",
+    "monitor_artifact_merger": "<PROJECT_ROOT>/scripts/lab/merge_monitor_agent_artifacts.py",
+    "monitor_multi_agent_cli": "python -m nexus.cli --root <PROJECT_ROOT> nexus-verix-monitor --init-run",
+    "monitor_multi_agent_launcher": "<PROJECT_ROOT>/scripts/lab/init_monitor_multi_agent_run.py",
+    "monitor_status": "<PROJECT_ROOT>/scripts/lab/inspect_nexus_lab_status.py",
+    "nexus_verix_orchestrator": "<PROJECT_ROOT>/scripts/lab/run_nexus_verix_orchestrator.py",
+    "skill_replay_agent": "<PROJECT_ROOT>/scripts/lab/run_nexus_skill_replay.py"
+  },
+  "case_registries": [
+    {
+      "case_count": 10,
+      "name": "structured",
+      "path": "<PROJECT_ROOT>/scripts/lab/nexus_lab_cases.json"
+    },
+    {
+      "case_count": 8,
+      "name": "real_project",
+      "path": "<PROJECT_ROOT>/scripts/lab/nexus_real_project_cases.json"
+    }
+  ],
+  "checks": [
+    {
+      "count": 25,
+      "name": "required_files",
+      "status": "pass"
+    },
+    {
+      "name": "problem_matrix",
+      "path": "<PROJECT_ROOT>/scripts/lab/nexus_problem_matrix.json",
+      "status": "pass"
+    },
+    {
+      "name": "structured_cases",
+      "path": "<PROJECT_ROOT>/scripts/lab/nexus_lab_cases.json",
+      "status": "pass"
+    },
+    {
+      "name": "real_cases",
+      "path": "<PROJECT_ROOT>/scripts/lab/nexus_real_project_cases.json",
+      "status": "pass"
+    },
+    {
+      "name": "evaluation_schema",
+      "path": "<PROJECT_ROOT>/docs/lab/evaluation_schema.json",
+      "status": "pass"
+    },
+    {
+      "name": "monitor_state_schema",
+      "path": "<PROJECT_ROOT>/docs/lab/monitor_agent_state.schema.json",
+      "status": "pass"
+    },
+    {
+      "name": "monitor_agent_roles",
+      "path": "<PROJECT_ROOT>/docs/lab/monitor_agent_roles.json",
+      "status": "pass"
+    },
+    {
+      "name": "problem_matrix_axes",
+      "problem_count": 16,
+      "status": "pass"
+    },
+    {
+      "dimension_count": 11,
+      "name": "problem_matrix_dimensions",
+      "status": "pass"
+    },
+    {
+      "name": "problem_matrix_coverage_policy",
+      "policy": {
+        "case_policy": "all_cases_cover_all_problem_axes",
+        "modification_policy": "failures must map back to Nexus general mechanisms, not to one sample project name",
+        "sample_policy": "no_sample_maps_to_only_one_problem",
+        "structured_policy": "structured and sample-derived tests both evaluate every problem axis"
+      },
+      "status": "pass"
+    },
+    {
+      "case_count": 10,
+      "name": "structured_cases",
+      "status": "pass",
+      "step_count": 19
+    },
+    {
+      "case_count": 8,
+      "name": "real_cases",
+      "status": "pass",
+      "step_count": 24
+    },
+    {
+      "count": 20,
+      "name": "real_case_source_paths",
+      "status": "pass"
+    },
+    {
+      "name": "completion_ledger",
+      "path": "<PROJECT_ROOT>/docs/lab/nexus_verix_completion_ledger.json",
+      "status": "pass"
+    },
+    {
+      "count": 12,
+      "name": "completion_ledger_items",
+      "status": "pass",
+      "statuses": [
+        "blocked",
+        "done",
+        "not_started"
+      ]
+    },
+    {
+      "count": 3,
+      "name": "sample_project_validators",
+      "status": "pass"
+    },
+    {
+      "name": "modification_planner",
+      "output_status": "ready_for_core_patch",
+      "status": "pass",
+      "target_groups": 1
+    },
+    {
+      "name": "status_inspector",
+      "status": "pass",
+      "stop_marker": "verified"
+    },
+    {
+      "name": "monitor_multi_agent_contract",
+      "required_agents": [
+        "nexus_execution",
+        "skill_replay",
+        "verix_audit",
+        "nexus_modification",
+        "state_audit"
+      ],
+      "status": "pass"
+    },
+    {
+      "execution_model": "monitor_multi_agent_v1",
+      "name": "monitor_state_schema_execution_model",
+      "status": "pass"
+    },
+    {
+      "name": "monitor_agent_roles",
+      "role_count": 5,
+      "status": "pass"
+    },
+    {
+      "execution_model": "orchestrated_subprocess_loop",
+      "name": "orchestrator_boundary_plan",
+      "satisfies_start_run_contract": false,
+      "status": "pass"
+    },
+    {
+      "execution_model": "monitor_multi_agent_v1",
+      "name": "monitor_multi_agent_launcher",
+      "status": "pass"
+    },
+    {
+      "execution_model": "monitor_multi_agent_v1",
+      "name": "monitor_multi_agent_cli_entrypoint",
+      "status": "pass"
+    },
+    {
+      "name": "manifest_written",
+      "path": "<PROJECT_ROOT>/docs/lab/lab_project_manifest.json",
+      "status": "pass"
+    }
+  ],
+  "errors": [],
+  "generated_at": "2026-06-19T07:20:33.730985+00:00",
+  "monitor_multi_agent_contract": {
+    "completion_ledger": "<PROJECT_ROOT>/docs/lab/nexus_verix_completion_ledger.json",
+    "contract": "<PROJECT_ROOT>/docs/lab/monitor_multi_agent_contract.md",
+    "execution_model": "monitor_multi_agent_v1",
+    "roles": "<PROJECT_ROOT>/docs/lab/monitor_agent_roles.json",
+    "state_schema": "<PROJECT_ROOT>/docs/lab/monitor_agent_state.schema.json"
+  },
+  "nexus_root": "<PROJECT_ROOT>",
+  "problem_matrix": {
+    "coverage_policy": {
+      "case_policy": "all_cases_cover_all_problem_axes",
+      "modification_policy": "failures must map back to Nexus general mechanisms, not to one sample project name",
+      "sample_policy": "no_sample_maps_to_only_one_problem",
+      "structured_policy": "structured and sample-derived tests both evaluate every problem axis"
+    },
+    "path": "<PROJECT_ROOT>/scripts/lab/nexus_problem_matrix.json",
+    "problem_count": 16,
+    "source": "<LOCAL_PATH_REDACTED>"
+  },
+  "schema": "nexus.lab.project_manifest.v1",
+  "status": "pass",
+  "warnings": []
+}

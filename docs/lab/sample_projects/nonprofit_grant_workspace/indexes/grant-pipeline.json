@@ -1,0 +1,71 @@
+{
+  "records": [
+    {
+      "funder_id": "FND-community-health-2026",
+      "program_name": "Community Health Access Fund",
+      "eligibility_rules": [
+        "Nonprofit status must be confirmed before submission.",
+        "Program must serve a local community health access goal.",
+        "Outcome evidence must include current-year beneficiary counts."
+      ],
+      "required_materials": [
+        {
+          "name": "project narrative",
+          "status": "draft",
+          "owner": "program-lead",
+          "evidence_links": ["EV-beneficiary-counts", "EV-clinic-partner-letter"]
+        },
+        {
+          "name": "line-item budget",
+          "status": "gap",
+          "owner": "operations",
+          "evidence_links": ["BUD-staff-time", "BUD-transportation"]
+        }
+      ],
+      "budget_items": [
+        {
+          "category": "staff time",
+          "amount": 18000,
+          "source_note": "operations estimate; needs finance confirmation",
+          "visibility": "private"
+        },
+        {
+          "category": "transportation support",
+          "amount": 7200,
+          "source_note": "based on planned ride vouchers for target beneficiaries",
+          "visibility": "public-summary"
+        }
+      ],
+      "evidence_items": [
+        {
+          "evidence_id": "EV-beneficiary-counts",
+          "description": "Current-year count of clients served by the access program.",
+          "authorization_status": "authorized",
+          "used_by": ["project narrative"]
+        },
+        {
+          "evidence_id": "EV-clinic-partner-letter",
+          "description": "Partner letter confirming referral workflow.",
+          "authorization_status": "pending",
+          "used_by": ["project narrative"]
+        }
+      ],
+      "deadline": "2026-09-15",
+      "owner": "program-lead",
+      "submission_status": "drafting",
+      "risk_notes": [
+        "Finance confirmation is still missing.",
+        "Partner letter cannot be public until authorization is confirmed."
+      ],
+      "review": {
+        "decision_status": "not-submitted",
+        "feedback_summary": "No funder feedback yet.",
+        "next_window": "2027 cycle unknown",
+        "next_actions": [
+          "Confirm finance source for staff time.",
+          "Request written authorization for partner letter."
+        ]
+      }
+    }
+  ]
+}

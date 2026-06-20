@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Nonprofit Grant Pipeline Record",
+  "type": "object",
+  "required": [
+    "funder_id",
+    "program_name",
+    "eligibility_rules",
+    "required_materials",
+    "budget_items",
+    "evidence_items",
+    "deadline",
+    "owner",
+    "submission_status",
+    "review"
+  ],
+  "properties": {
+    "funder_id": {
+      "type": "string",
+      "description": "Stable local ID for comparing funder opportunities."
+    },
+    "program_name": {
+      "type": "string",
+      "description": "Name of the grant or funding program."
+    },
+    "eligibility_rules": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Eligibility conditions extracted from funder materials."
+    },
+    "required_materials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "status", "owner", "evidence_links"],
+        "properties": {
+          "name": {"type": "string"},
+          "status": {"type": "string", "enum": ["ready", "gap", "blocked", "draft"]},
+          "owner": {"type": "string"},
+          "evidence_links": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "budget_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["category", "amount", "source_note", "visibility"],
+        "properties": {
+          "category": {"type": "string"},
+          "amount": {"type": "number"},
+          "source_note": {"type": "string"},
+          "visibility": {"type": "string", "enum": ["private", "public-summary"]}
+        }
+      }
+    },
+    "evidence_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["evidence_id", "description", "authorization_status", "used_by"],
+        "properties": {
+          "evidence_id": {"type": "string"},
+          "description": {"type": "string"},
+          "authorization_status": {"type": "string", "enum": ["authorized", "private", "pending"]},
+          "used_by": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "deadline": {"type": "string", "description": "Submission deadline in ISO date format when known."},
+    "owner": {"type": "string"},
+    "submission_status": {"type": "string", "enum": ["researching", "drafting", "ready", "submitted", "declined", "awarded"]},
+    "review": {
+      "type": "object",
+      "required": ["decision_status", "feedback_summary", "next_window", "next_actions"],
+      "properties": {
+        "decision_status": {"type": "string"},
+        "feedback_summary": {"type": "string"},
+        "next_window": {"type": "string"},
+        "next_actions": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

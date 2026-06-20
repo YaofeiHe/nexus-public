@@ -1,0 +1,56 @@
+{
+  "schema": "nexus.lab.monitor_agent_roles.v1",
+  "execution_model": "monitor_multi_agent_v1",
+  "roles": [
+    {
+      "role_id": "nexus_execution",
+      "spawn_required": true,
+      "input_contract_path": "agent_tasks/01_nexus_execution.md",
+      "output_contract_path": "artifacts/nexus_execution/execution_summary.json",
+      "allowed_write_paths": ["artifacts/nexus_execution/**"],
+      "required_artifacts": ["heartbeat_status.json", "execution_summary.json", "case_artifacts_index.json"],
+      "blocked_conditions": ["nexus_cli_missing", "real_provider_unavailable", "external_authorization_required"],
+      "done_conditions": ["case execution artifacts written", "run_id/state/interaction/artifact refs indexed"]
+    },
+    {
+      "role_id": "skill_replay",
+      "spawn_required": true,
+      "input_contract_path": "agent_tasks/02_skill_replay.md",
+      "output_contract_path": "artifacts/skill_replay/skill_replay_summary.json",
+      "allowed_write_paths": ["artifacts/skill_replay/**"],
+      "required_artifacts": ["heartbeat_status.json", "skill_replay_summary.json", "prompt_turns.jsonl"],
+      "blocked_conditions": ["real_thread_replay_unavailable", "codex_response_timeout", "external_authorization_required"],
+      "done_conditions": ["wljob 0-34 command chain evaluated", "step-by-step skill workflow evidence written", "research online-search approval continuation is either completed to final report or explicitly blocked with same-run continuation prompt"]
+    },
+    {
+      "role_id": "verix_audit",
+      "spawn_required": true,
+      "input_contract_path": "agent_tasks/03_verix_audit.md",
+      "output_contract_path": "artifacts/verix_audit/verix_verdict.json",
+      "allowed_write_paths": ["artifacts/verix_audit/**"],
+      "required_artifacts": ["heartbeat_status.json", "verix_verdict.json", "audit_evidence_index.json"],
+      "blocked_conditions": ["verix_cli_missing", "real_provider_unavailable", "online_research_approval_required"],
+      "done_conditions": ["independent verdict written", "required Nexus changes are evidence-linked", "original intent is read independently from Nexus normalized outputs"]
+    },
+    {
+      "role_id": "nexus_modification",
+      "spawn_required": true,
+      "input_contract_path": "agent_tasks/04_nexus_modification.md",
+      "output_contract_path": "artifacts/nexus_modification/patch_summary.md",
+      "allowed_write_paths": ["nexus/**", "tests/**", "scripts/lab/**", "docs/lab/**"],
+      "required_artifacts": ["heartbeat_status.json", "patch_summary.md", "verification_results.json"],
+      "blocked_conditions": ["no_modification_request", "unsafe_sample_specific_patch", "tests_unavailable"],
+      "done_conditions": ["general Nexus mechanism patched", "focused or full verification results written"]
+    },
+    {
+      "role_id": "state_audit",
+      "spawn_required": true,
+      "input_contract_path": "agent_tasks/05_state_audit.md",
+      "output_contract_path": "artifacts/state_audit/state_audit_report.json",
+      "allowed_write_paths": ["artifacts/state_audit/**"],
+      "required_artifacts": ["heartbeat_status.json", "state_audit_report.json"],
+      "blocked_conditions": ["monitor_state_missing", "stale_agent_heartbeat", "missing_required_agent"],
+      "done_conditions": ["state verdict written", "next monitor action listed"]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "public_allowed": [
+    "confirmed issue status",
+    "public-safe regression command",
+    "README or changelog text after scan",
+    "release blocker summary without private notes",
+    "recovery summary without sensitive details"
+  ],
+  "private_only": [
+    "unconfirmed vulnerability details",
+    "maintainer internal discussion",
+    "private repository names",
+    "tokens and credentials",
+    "local absolute paths",
+    "unpublished exploit details",
+    "security-sensitive issue notes"
+  ],
+  "scan_rules": [
+    "reject token-like strings",
+    "reject local absolute paths",
+    "reject private repo placeholders",
+    "reject private-sensitive issue details in public material",
+    "require explicit public release confirmation"
+  ]
+}

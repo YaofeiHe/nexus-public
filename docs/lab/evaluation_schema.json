@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.nexus.lab/evaluation_schema.json",
+  "title": "Nexus Lab Evaluation Verdict",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "case_id",
+    "run_id",
+    "verdict",
+    "failed_surface",
+    "expected",
+    "observed",
+    "evidence_refs",
+    "generalization_check",
+    "problem_matrix",
+    "problem_axis_results",
+    "required_nexus_change",
+    "dimensions",
+    "heuristic_review_notice"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_id": {
+      "type": ["string", "null"]
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["pass", "fail", "blocked"]
+    },
+    "failed_surface": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "observed": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence_ref"
+      }
+    },
+    "generalization_check": {
+      "type": "object",
+      "required": ["status", "observed", "evidence_refs"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pass", "fail", "blocked"]
+        },
+        "observed": {
+          "type": "string"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "required_nexus_change": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dimension", "surface", "recommendation", "reason"],
+        "properties": {
+          "dimension": {
+            "type": "string"
+          },
+          "surface": {
+            "type": "string"
+          },
+          "recommendation": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "problem_matrix": {
+      "type": "object",
+      "required": ["source", "problem_count"],
+      "properties": {
+        "schema": {
+          "type": ["string", "null"]
+        },
+        "source": {
+          "type": ["string", "null"]
+        },
+        "coverage_policy": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "problem_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "problem_axis_results": {
+      "type": "array",
+      "minItems": 16,
+      "items": {
+        "$ref": "#/$defs/problem_axis_result"
+      }
+    },
+    "dimensions": {
+      "type": "array",
+      "minItems": 11,
+      "items": {
+        "$ref": "#/$defs/dimension_result"
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "heuristic_review_notice": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "evidence_ref": {
+      "type": "object",
+      "required": ["id", "path", "note", "exists"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^ev[0-9]+$"
+        },
+        "path": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "exists": {
+          "type": "boolean"
+        },
+        "line_start": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "line_end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "excerpt": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "dimension_result": {
+      "type": "object",
+      "required": [
+        "name",
+        "surface",
+        "status",
+        "expected",
+        "observed",
+        "evidence_refs",
+        "required_nexus_change"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": [
+            "intent_capture",
+            "intent_understanding",
+            "reference_reading_record",
+            "search_plan_log",
+            "domain_workflows",
+            "validation_script",
+            "sync_artifacts",
+            "recovery_rebind",
+            "playbook_persistence",
+            "monitor_next_prompt",
+            "anti_hardcoding"
+          ]
+        },
+        "surface": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pass", "fail", "blocked"]
+        },
+        "expected": {
+          "type": "string"
+        },
+        "observed": {
+          "type": "string"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_nexus_change": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "problem_axis_result": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "status",
+        "expected",
+        "observed",
+        "dimensions",
+        "surfaces",
+        "required_evidence",
+        "applies_to_every_case",
+        "evidence_refs",
+        "required_nexus_change"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^P[0-9]{2}$"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pass", "fail", "blocked"]
+        },
+        "expected": {
+          "type": "string"
+        },
+        "observed": {
+          "type": "string"
+        },
+        "dimensions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "surfaces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "applies_to_every_case": {
+          "type": "boolean"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_nexus_change": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

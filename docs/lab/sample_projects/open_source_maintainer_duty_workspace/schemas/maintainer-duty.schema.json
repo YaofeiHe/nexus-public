@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Open Source Maintainer Duty Board",
+  "type": "object",
+  "required": [
+    "issues",
+    "release_blockers",
+    "regression_evidence",
+    "handoff_packet",
+    "recovery_records"
+  ],
+  "properties": {
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["issue_id", "title", "classification", "severity", "public_status", "owner", "next_action"],
+        "properties": {
+          "issue_id": {"type": "string"},
+          "title": {"type": "string"},
+          "classification": {"type": "string", "enum": ["now", "next", "later", "blocker", "security-sensitive"]},
+          "severity": {"type": "string", "enum": ["low", "medium", "high", "critical", "unknown"]},
+          "public_status": {"type": "string", "enum": ["public", "public-summary", "private-sensitive", "withheld"]},
+          "owner": {"type": "string"},
+          "next_action": {"type": "string"}
+        }
+      }
+    },
+    "release_blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["blocker_id", "linked_issue", "reason", "clear_condition", "status", "evidence_refs"],
+        "properties": {
+          "blocker_id": {"type": "string"},
+          "linked_issue": {"type": "string"},
+          "reason": {"type": "string"},
+          "clear_condition": {"type": "string"},
+          "status": {"type": "string", "enum": ["open", "blocked", "cleared"]},
+          "evidence_refs": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "regression_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["evidence_id", "command", "environment", "result", "public_safe"],
+        "properties": {
+          "evidence_id": {"type": "string"},
+          "command": {"type": "string"},
+          "environment": {"type": "string"},
+          "result": {"type": "string", "enum": ["passed", "failed", "blocked"]},
+          "public_safe": {"type": "boolean"}
+        }
+      }
+    },
+    "handoff_packet": {
+      "type": "object",
+      "required": ["current_risks", "next_reader_start_here", "private_notes_ref", "public_summary"],
+      "properties": {
+        "current_risks": {"type": "array", "items": {"type": "string"}},
+        "next_reader_start_here": {"type": "array", "items": {"type": "string"}},
+        "private_notes_ref": {"type": "string"},
+        "public_summary": {"type": "string"}
+      }
+    },
+    "recovery_records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["failure_signature", "diagnosis", "fix_summary", "test_evidence", "reuse_condition"],
+        "properties": {
+          "failure_signature": {"type": "string"},
+          "diagnosis": {"type": "string"},
+          "fix_summary": {"type": "string"},
+          "test_evidence": {"type": "string"},
+          "reuse_condition": {"type": "string"}
+        }
+      }
+    }
+  }
+}

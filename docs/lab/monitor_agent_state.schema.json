@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Nexus-Verix Monitor Multi-Agent State",
+  "type": "object",
+  "required": [
+    "schema",
+    "run_id",
+    "status",
+    "phase",
+    "execution_model",
+    "spawn_source",
+    "python_embeds_subagents",
+    "problem_backlog",
+    "agents",
+    "main_flow",
+    "stop_file"
+  ],
+  "properties": {
+    "schema": {
+      "const": "nexus.lab.monitor_multi_agent_state.v1"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "monitor_thread_id": {
+      "type": "string"
+    },
+    "start_user_message": {
+      "type": "string"
+    },
+    "status": {
+      "enum": ["ready_to_spawn", "running", "awaiting_user", "awaiting_agent", "needs_modification", "blocked", "pass", "stopped"]
+    },
+    "phase": {
+      "type": "string"
+    },
+    "execution_model": {
+      "const": "monitor_multi_agent_v1"
+    },
+    "not_execution_model": {
+      "const": "orchestrated_subprocess_loop_only"
+    },
+    "spawn_source": {
+      "const": "current_codex_conversation_multi_agent_v1"
+    },
+    "python_embeds_subagents": {
+      "const": false
+    },
+    "active_owner": {
+      "type": "string"
+    },
+    "pending_actions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "pending_user_decision": {
+      "type": "object"
+    },
+    "external_side_effects": {
+      "enum": ["authorization-gated", "allowed"]
+    },
+    "operation_modes": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["mode_id", "description", "acceptance"],
+        "properties": {
+          "mode_id": {
+            "enum": ["step_by_step_skill_workflow", "default_autonomous_multi_agent_build"]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "acceptance": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "reference1_unresolved_proof_gaps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "control_semantics": {
+      "type": "object"
+    },
+    "instruction_log": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "problem_backlog": {
+      "type": "object",
+      "required": ["path", "issue_memory_path", "single_source_of_truth", "read_required_by", "status_values_allowed", "problem_matrix_path", "completion_ledger_path"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issue_memory_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "single_source_of_truth": {
+          "const": true
+        },
+        "read_required_by": {
+          "type": "array",
+          "contains": {
+            "const": "monitor"
+          }
+        },
+        "status_values_allowed": {
+          "type": "array",
+          "items": {
+            "enum": ["done", "failed", "blocked", "not_started"]
+          }
+        },
+        "problem_matrix_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "completion_ledger_path": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "artifact_index": {
+      "type": "object"
+    },
+    "source_consumption": {
+      "type": "object"
+    },
+    "shared_artifacts": {
+      "type": "object"
+    },
+    "last_heartbeat_at": {
+      "type": "string"
+    },
+    "stop_file": {
+      "type": "string",
+      "minLength": 1
+    },
+    "events_log": {
+      "type": "string",
+      "minLength": 1
+    },
+    "approval_queue": {
+      "type": "string",
+      "minLength": 1
+    },
+    "handoffs_dir": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifact_merge_command": {
+      "type": "string"
+    },
+    "state_update_command": {
+      "type": "string"
+    },
+    "resume_contract": {
+      "type": "object"
+    },
+    "main_flow": {
+      "type": "object",
+      "required": ["interruption_policy", "next_monitor_action"],
+      "properties": {
+        "active": {
+          "type": "boolean"
+        },
+        "interruption_policy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "next_monitor_action": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "agents": {
+      "type": "object",
+      "required": ["nexus_execution", "skill_replay", "verix_audit", "nexus_modification", "state_audit"],
+      "additionalProperties": {
+        "type": "object",
+        "required": ["status", "multi_agent_v1_id", "task_prompt_path", "output_dir"],
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "multi_agent_v1_id": {
+            "type": "string"
+          },
+          "task_prompt_path": {
+            "type": "string"
+          },
+          "output_dir": {
+            "type": "string"
+          },
+          "last_update": {
+            "type": "string"
+          },
+          "blocker": {
+            "type": "string"
+          },
+          "source_consumption": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

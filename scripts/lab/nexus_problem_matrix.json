@@ -1,0 +1,157 @@
+{
+  "schema": "nexus.lab.problem_matrix.v1",
+  "source": "<LOCAL_PATH_REDACTED>",
+  "coverage_policy": {
+    "case_policy": "all_cases_cover_all_problem_axes",
+    "sample_policy": "no_sample_maps_to_only_one_problem",
+    "structured_policy": "structured and sample-derived tests both evaluate every problem axis",
+    "modification_policy": "failures must map back to Nexus general mechanisms, not to one sample project name"
+  },
+  "common_prompt_suffix": "参照 <LOCAL_PATH_REDACTED> 中整理出的 16 个 Nexus 通用问题，本 case 不是只测当前样例项目：必须把原始意图转成可执行项目结构；必须读取并记录用户指定的历史文件、项目目录、prompt 和参考材料；必须输出检索/读取计划与实际记录；必须生成领域 workflow、schema 或索引、validator、operation guide、requirement trace；必须给 monitor 可读的当前状态、下一条 $nexus-workflow 指令、阻断原因或人工介入点；必须把默认 GitHub private 同步、显式 public 发布、Feishu、恢复回绑、recovery playbook 持久化写成可审计边界；不得把当前样例当作唯一范围，不得按 feeler/probe/wljob/codpm/orbit 等样例名硬编码。",
+  "problems": [
+    {
+      "id": "P01",
+      "title": "外部 Codex debug 后必须回到原 Nexus 暂停点",
+      "user_problem": "跳出 Nexus workflow 用外部 Codex 修复后，必须能回到原 run_id、原 pending continuation，继续完整 Nexus workflow。",
+      "evaluator_dimensions": ["recovery_rebind", "monitor_next_prompt"],
+      "nexus_surfaces": ["Runner.execute_code_change", "Runner.handoff_for_debug", "Runner.append_debug_worklog", "Runner.rebind_and_continue", "interaction.json", "state.json"],
+      "required_evidence": ["handoffs/debug_handoff.json", "worklogs/debug_worklog.json", "rebind/rebind_result.json", "interaction.json"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P02",
+      "title": "外部恢复操作必须沉淀到 recovery playbook",
+      "user_problem": "外部 Codex 中完成的诊断、修改、测试和恢复结论必须按原流程写回 Nexus recovery playbook。",
+      "evaluator_dimensions": ["playbook_persistence", "recovery_rebind"],
+      "nexus_surfaces": ["nexus.recovery", "Runner._write_debug_recovery_result_if_possible", "Runner._write_recovery_playbook_approval_if_completed"],
+      "required_evidence": [".nexus/recovery-playbook.json", "docs/recovery-records.md", "tool_results/recovery_result.json", "approvals/recovery_playbook_write_required.json"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P03",
+      "title": "用户不应反复输入同一限定语",
+      "user_problem": "Codex 必须把用户反复强调的边界沉淀成工程验收项，而不是每换一个入口就丢掉。",
+      "evaluator_dimensions": ["intent_understanding", "monitor_next_prompt"],
+      "nexus_surfaces": ["write_project_docs", "project-intent.json", "interaction.json", "lab modification request"],
+      "required_evidence": ["docs/intent/normalized-requirement.md", "docs/requirement-trace.md", "interaction.json"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P04",
+      "title": "初始化、补充初始化、自同步、public 同步不能反复纠缠",
+      "user_problem": "同类同步和初始化入口必须复用统一内层能力，不能一个入口修好、另一个入口又坏掉。",
+      "evaluator_dimensions": ["sync_artifacts", "monitor_next_prompt", "anti_hardcoding"],
+      "nexus_surfaces": ["supplement_init", "_self_sync_flow", "_post_change_autosync", "_github_public_flow"],
+      "required_evidence": ["tool_results/self_sync_*.json", "tool_results/post_change_*.json", "tool_results/github_public_*.json", "recovery/continuation.json"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P05",
+      "title": "GitHub private 默认同步和 public 显式确认不能混淆",
+      "user_problem": "默认 private 同步、Feishu 写回后的 private 再同步、public 发布确认必须有清楚边界。",
+      "evaluator_dimensions": ["sync_artifacts", "monitor_next_prompt"],
+      "nexus_surfaces": ["github_sync", "feishu_autosync", "operation guide", "pending_actions"],
+      "required_evidence": ["tool_results/github_private*.json", "tool_results/*feishu*.json", "tool_results/github_public_staging.json", "tool_results/github_public_validation.json"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P06",
+      "title": "初始化不能只保存 raw input，必须理解成项目功能和结构",
+      "user_problem": "Nexus 必须把初始输入转成模块、数据对象、workflow、验收标准和边界，而不是只归档原文。",
+      "evaluator_dimensions": ["intent_capture", "intent_understanding", "domain_workflows", "validation_script"],
+      "nexus_surfaces": ["Runner.init_project", "write_project_docs", ".nexus/project-intent.json"],
+      "required_evidence": ["docs/intent/original-requirement.md", "docs/intent/normalized-requirement.md", "docs/project-overview.md", "workflows/", "scripts/validate_project.py"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P07",
+      "title": "一两句项目说明不能算需求理解",
+      "user_problem": "probe 式浅层治理文档或项目名解释不能替代详细项目意图说明。",
+      "evaluator_dimensions": ["intent_understanding", "domain_workflows", "anti_hardcoding"],
+      "nexus_surfaces": ["write_project_docs", "project workspace generation"],
+      "required_evidence": ["docs/intent/normalized-requirement.md", "docs/requirement-trace.md", "workflows/"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P08",
+      "title": "用户指定的历史文件、目录、prompt 必须成为必读来源",
+      "user_problem": "初始化时不能忽略用户点名的历史文件、项目目录和 prompt，必须形成读取计划与索引。",
+      "evaluator_dimensions": ["reference_reading_record", "search_plan_log", "intent_understanding"],
+      "nexus_surfaces": ["source bundle", "project_docs", "search_service", "conversation ingestion"],
+      "required_evidence": ["docs/intent/source-material-index.md", "docs/reference-materials.md", "reports/source_reading_plan.md", "reports/source_reading_log.md"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P09",
+      "title": "检索后不能只给运行状态",
+      "user_problem": "用户必须能看到检索规划、实际检索、命中结果、覆盖缺口和停止理由。",
+      "evaluator_dimensions": ["search_plan_log", "reference_reading_record", "monitor_next_prompt"],
+      "nexus_surfaces": ["SearchService.execute_round", "reports/search_trace_summary", "interaction artifact refs"],
+      "required_evidence": ["search_rounds/*/search_plan.json", "search_rounds/*/source_status.json", "search_rounds/*/coverage_review.json", "reports/search_trace_summary.md"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P10",
+      "title": "自动输出质量必须接近手工带出的 feeler",
+      "user_problem": "Nexus 产物必须是用户能直接使用的工作区，而不是只有 Nexus 管理痕迹。",
+      "evaluator_dimensions": ["intent_understanding", "domain_workflows", "validation_script", "anti_hardcoding"],
+      "nexus_surfaces": ["project workspace generation", "operation guide", "validator"],
+      "required_evidence": ["docs/project-overview.md", "docs/operation-guide.md", "workflows/", "schemas/", "scripts/validate_project.py"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P11",
+      "title": "构建、测试、反馈、再修改必须成为闭环",
+      "user_problem": "Nexus 不能只初始化一次，必须能根据评测结果更新需求、否定错误设计并进入下一轮修改。",
+      "evaluator_dimensions": ["validation_script", "monitor_next_prompt", "intent_understanding"],
+      "nexus_surfaces": ["lab loop", "evaluation.json", "modification_request.json", "board/status"],
+      "required_evidence": ["evaluation.json", "modification_request.json", "retest_result.json", "loop_state.json"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P12",
+      "title": "Verix 式独立评测必须驱动 Nexus 修改",
+      "user_problem": "独立评测 agent 应独立理解同一初始意图，模拟 skill 输入，判断失败并反馈给修改 agent。",
+      "evaluator_dimensions": ["monitor_next_prompt", "validation_script", "anti_hardcoding"],
+      "nexus_surfaces": ["evaluation agent contract", "modification request", "skill replay testset"],
+      "required_evidence": ["evaluation.json", "modification_request.json", "skill_replay_plan.json"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P13",
+      "title": "Monitor 必须能看到整条闭环阶段",
+      "user_problem": "用户应能在 monitor 中看到当前是构建、测试、修改、同步还是恢复，以及下一步和可终止点。",
+      "evaluator_dimensions": ["monitor_next_prompt"],
+      "nexus_surfaces": ["loop_state.json", "interaction.json", "board/status"],
+      "required_evidence": ["loop_state.json", "iteration_summary.json", "interaction.json"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P14",
+      "title": "不能用专业词替代真实 artifacts",
+      "user_problem": "可审计、闭环、恢复等说法必须落到文件、命令、状态字段和测试证据。",
+      "evaluator_dimensions": ["reference_reading_record", "search_plan_log", "validation_script", "monitor_next_prompt"],
+      "nexus_surfaces": ["artifact refs", "operation guide", "validator", "loop reports"],
+      "required_evidence": ["evidence_refs", "tool_results/", "reports/", "scripts/validate_project.py"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P15",
+      "title": "示例不限定范围，必须抽象成同类能力",
+      "user_problem": "比如、类似、这一类问题都表示同类能力要求，不能只修当前例子。",
+      "evaluator_dimensions": ["anti_hardcoding", "intent_understanding"],
+      "nexus_surfaces": ["generalization review", "case matrix", "source code review"],
+      "required_evidence": ["generalization_check", "problem_axis_results", "sample-external variant results"],
+      "applies_to_every_case": true
+    },
+    {
+      "id": "P16",
+      "title": "分散 CLI 必须组合成节省机械操作的端到端系统",
+      "user_problem": "Nexus 必须把 provider、search、recovery、sync、conversation、project docs、approval 串成可持续运行的自动化项目构建系统。",
+      "evaluator_dimensions": ["monitor_next_prompt", "sync_artifacts", "recovery_rebind", "playbook_persistence", "validation_script"],
+      "nexus_surfaces": ["lab loop", "runner orchestration", "board/status", "interaction schema"],
+      "required_evidence": ["loop_state.json", "iteration_summary.json", "modification_request.json", "retest_result.json"],
+      "applies_to_every_case": true
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "incidents": [
+    {
+      "incident_id": "INC-2026-ops-floor-delay",
+      "reported_at": "2026-06-10T09:30:00Z",
+      "site": "north service floor",
+      "severity": "medium",
+      "initial_impact": "Field team reported a delayed handoff that affected the morning service window.",
+      "current_status": "remediating",
+      "evidence_sources": [
+        {
+          "source_id": "SRC-shift-log",
+          "kind": "shift log excerpt",
+          "read_status": "read",
+          "summary": "Confirmed handoff delay and first response time."
+        },
+        {
+          "source_id": "SRC-team-interview",
+          "kind": "interview notes",
+          "read_status": "pending",
+          "summary": "Interview notes are planned but not yet available."
+        }
+      ],
+      "root_cause": {
+        "hypotheses": [
+          {
+            "claim": "The escalation checklist was unclear for cross-team handoff.",
+            "supporting_evidence": ["SRC-shift-log"],
+            "counter_evidence": ["SRC-team-interview pending"],
+            "confidence": "medium"
+          }
+        ],
+        "open_questions": [
+          "Whether the checklist was outdated or not visible during the shift.",
+          "Whether staffing level affected response time."
+        ]
+      },
+      "remediation_actions": [
+        {
+          "action_id": "ACT-update-handoff-checklist",
+          "owner": "ops-coordinator",
+          "due_date": "2026-06-21",
+          "status": "in-progress",
+          "verification_method": "Run next shift handoff drill and confirm checklist use.",
+          "evidence": []
+        }
+      ],
+      "leadership_summary": {
+        "public_summary": "A medium-severity handoff delay is under remediation; no final root cause is published yet.",
+        "internal_risks": [
+          "Checklist ownership is not yet confirmed.",
+          "Interview evidence is still pending."
+        ],
+        "next_update": "2026-06-24"
+      },
+      "public_boundary": {
+        "public_allowed": ["severity band", "general status", "next update date"],
+        "private_only": ["interview excerpts", "owner names", "unverified root-cause details"]
+      }
+    }
+  ]
+}

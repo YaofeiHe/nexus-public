@@ -1,0 +1,9 @@
+{
+  "description": "Use this skill when the user says \"使用 nexus\", \"nexus 调研\", \"用 nexus 调研当前项目\", \"调研某个项目是否有完整现成实现\", \"Codex-first workflow kernel\", or asks Codex to run a local Nexus research / workflow orchestrator. This skill must call the local nexus CLI with a real provider and must not use mock unless the user explicitly asks for mock/test mode.",
+  "name": "nexus-workflow",
+  "schema_version": "v1",
+  "skills": [
+    "skills/nexus-workflow/SKILL.md"
+  ],
+  "version": "0.1.0"
+}

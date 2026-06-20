@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Field Incident Review Record",
+  "type": "object",
+  "required": [
+    "incident_id",
+    "reported_at",
+    "site",
+    "severity",
+    "initial_impact",
+    "evidence_sources",
+    "root_cause",
+    "remediation_actions",
+    "leadership_summary",
+    "public_boundary"
+  ],
+  "properties": {
+    "incident_id": {"type": "string"},
+    "reported_at": {"type": "string"},
+    "site": {"type": "string"},
+    "severity": {"type": "string", "enum": ["low", "medium", "high", "critical", "unconfirmed"]},
+    "initial_impact": {"type": "string"},
+    "current_status": {"type": "string", "enum": ["intake", "reviewing", "remediating", "verified", "closed", "blocked"]},
+    "evidence_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "kind", "read_status", "summary"],
+        "properties": {
+          "source_id": {"type": "string"},
+          "kind": {"type": "string"},
+          "read_status": {"type": "string", "enum": ["read", "pending", "unavailable"]},
+          "summary": {"type": "string"}
+        }
+      }
+    },
+    "root_cause": {
+      "type": "object",
+      "required": ["hypotheses", "open_questions"],
+      "properties": {
+        "hypotheses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["claim", "supporting_evidence", "counter_evidence", "confidence"],
+            "properties": {
+              "claim": {"type": "string"},
+              "supporting_evidence": {"type": "array", "items": {"type": "string"}},
+              "counter_evidence": {"type": "array", "items": {"type": "string"}},
+              "confidence": {"type": "string", "enum": ["low", "medium", "high", "pending"]}
+            }
+          }
+        },
+        "open_questions": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "remediation_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["action_id", "owner", "due_date", "status", "verification_method", "evidence"],
+        "properties": {
+          "action_id": {"type": "string"},
+          "owner": {"type": "string"},
+          "due_date": {"type": "string"},
+          "status": {"type": "string", "enum": ["pending", "blocked", "in-progress", "verified"]},
+          "verification_method": {"type": "string"},
+          "evidence": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "leadership_summary": {
+      "type": "object",
+      "required": ["public_summary", "internal_risks", "next_update"],
+      "properties": {
+        "public_summary": {"type": "string"},
+        "internal_risks": {"type": "array", "items": {"type": "string"}},
+        "next_update": {"type": "string"}
+      }
+    },
+    "public_boundary": {
+      "type": "object",
+      "required": ["public_allowed", "private_only"],
+      "properties": {
+        "public_allowed": {"type": "array", "items": {"type": "string"}},
+        "private_only": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

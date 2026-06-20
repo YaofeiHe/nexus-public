@@ -1,0 +1,63 @@
+{
+  "issues": [
+    {
+      "issue_id": "ISSUE-142",
+      "title": "Regression in configuration loading after parser update",
+      "classification": "blocker",
+      "severity": "high",
+      "public_status": "public-summary",
+      "owner": "release-manager",
+      "next_action": "Collect regression evidence and confirm clear condition before release."
+    },
+    {
+      "issue_id": "ISSUE-151",
+      "title": "Unconfirmed report involving sensitive deployment details",
+      "classification": "security-sensitive",
+      "severity": "unknown",
+      "public_status": "private-sensitive",
+      "owner": "security-reviewer",
+      "next_action": "Keep private until policy owner confirms disclosure path."
+    }
+  ],
+  "release_blockers": [
+    {
+      "blocker_id": "BLK-config-loader",
+      "linked_issue": "ISSUE-142",
+      "reason": "Configuration regression can break existing user installs.",
+      "clear_condition": "Regression command passes and README migration note is public-safe.",
+      "status": "open",
+      "evidence_refs": ["REG-config-loader-smoke"]
+    }
+  ],
+  "regression_evidence": [
+    {
+      "evidence_id": "REG-config-loader-smoke",
+      "command": "pytest tests/test_config_loader.py",
+      "environment": "local sample environment; no real CI claim",
+      "result": "blocked",
+      "public_safe": true
+    }
+  ],
+  "handoff_packet": {
+    "current_risks": [
+      "ISSUE-142 is still a release blocker.",
+      "ISSUE-151 must remain private until disclosure policy is confirmed."
+    ],
+    "next_reader_start_here": [
+      "Read release_blockers first.",
+      "Then review regression_evidence for blocked commands.",
+      "Do not publish private-sensitive issue details."
+    ],
+    "private_notes_ref": "private maintainer notes are intentionally not included in this public sample",
+    "public_summary": "Release is not ready because one configuration regression remains open."
+  },
+  "recovery_records": [
+    {
+      "failure_signature": "regression command blocked before release",
+      "diagnosis": "The sample requires evidence before clearing a blocker; blocked evidence must not be hidden.",
+      "fix_summary": "Keep blocker open and add explicit next action for collecting evidence.",
+      "test_evidence": "python3 scripts/validate_project.py checks blocked evidence and public/private boundary.",
+      "reuse_condition": "Use when a maintainer tries to clear a blocker without regression evidence."
+    }
+  ]
+}

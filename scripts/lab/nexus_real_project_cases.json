@@ -1,0 +1,394 @@
+{
+  "schema": "nexus.lab.cases.v1",
+  "source_documents": [
+    "docs/lab/real_project_e2e_cases.md",
+    "docs/lab/nexus_modification_backlog.md",
+    "scripts/lab/nexus_problem_matrix.json",
+    "<LOCAL_PATH_REDACTED>"
+  ],
+  "notes": [
+    "These cases use real Forge projects as sources, but write target projects under E2E_ROOT.",
+    "Reference projects are read-only sources. The harness must not modify codpm, forge-manager, feeler, thesis, probe, orbit, or wljob unless an explicit side-effect case says so.",
+    "Default init cases pass --no-github-sync and --no-feishu-sync. Sync and public cases are separated and marked as external side effects.",
+    "Every case is evaluated against every problem axis in scripts/lab/nexus_problem_matrix.json. The per-case problem_targets below are overwritten by the harness for execution metadata; the original local emphasis is retained as original_problem_targets."
+  ],
+  "cases": [
+    {
+      "id": "real_01_codpm_workflow_rebuild",
+      "title": "Rebuild a codpm-class workflow project from real project evidence",
+      "project_path": "{E2E_ROOT}/projects/codpm_workflow_rebuild",
+      "requires_external_side_effect": false,
+      "source_projects": ["codpm"],
+      "problem_targets": ["intent_understanding", "reference_reading_record", "domain_workflows", "validation_script", "sync_artifacts"],
+      "expected_behavior": "Nexus should read the real codpm docs/history as references and create an isolated codpm-class workflow project with CLI workflow surfaces, source-of-truth registry rules, rule/skill/hook/config/MCP/memory concepts, operation guide, workflow docs, schemas or indexes, validator, and source reading plan/log. It must not edit the live codpm project.",
+      "pass_requirements": [
+        "The target project explains Codex personalization governance rather than only writing generic Nexus governance files.",
+        "The output distinguishes source-of-truth surfaces from registry metadata.",
+        "The output includes workflow entries for list/show/check/render/watch/rule maintenance and Feishu/GitHub sync boundaries.",
+        "The output records codpm README, project docs, and codpm init histories as read or skipped sources with extracted requirements.",
+        "The output includes a local validation script or equivalent."
+      ],
+      "steps": [
+        {
+          "id": "init_codpm_rebuild",
+          "prompt": "$nexus-workflow 初始化自动化测试项目：参考 <FORGE_ROOT>/codpm、<FORGE_ROOT>/codex_history/06100109-codpm-init-history.md、<FORGE_ROOT>/codex_history/06100110-codpm-init-current-thread.md，从零构建一个名为 codpm_workflow_rebuild 的隔离测试项目，目标是复现 codpm 这类可用 workflow 项目的通用能力。参考项目只读，不要改 codpm。父目录 {E2E_ROOT}/projects。不要同步 GitHub，不要同步飞书。",
+          "nexus_args": [
+            "init-project",
+            "参考 <FORGE_ROOT>/codpm、<FORGE_ROOT>/codex_history/06100109-codpm-init-history.md、<FORGE_ROOT>/codex_history/06100110-codpm-init-current-thread.md，从零构建一个名为 codpm_workflow_rebuild 的隔离测试项目，目标是复现 codpm 这类可用 workflow 项目的通用能力。必须理解 codpm 的 Codex 个性化治理、真实 surface、registry 元数据、rule/skill/hook/config/MCP/memory、CLI workflow、Feishu/GitHub 边界和 public 验收。参考项目只读，不要改 codpm。父目录 {E2E_ROOT}/projects。",
+            "--parent",
+            "{E2E_ROOT}/projects",
+            "--provider",
+            "auto",
+            "--raw-user-request",
+            "$nexus-workflow 初始化自动化测试项目：参考 <FORGE_ROOT>/codpm、<FORGE_ROOT>/codex_history/06100109-codpm-init-history.md、<FORGE_ROOT>/codex_history/06100110-codpm-init-current-thread.md，从零构建一个名为 codpm_workflow_rebuild 的隔离测试项目，目标是复现 codpm 这类可用 workflow 项目的通用能力。参考项目只读，不要改 codpm。父目录 {E2E_ROOT}/projects。不要同步 GitHub，不要同步飞书。",
+            "--no-github-sync",
+            "--no-feishu-sync"
+          ]
+        },
+        {
+          "id": "approve_project_root",
+          "prompt": "$nexus-workflow 审批 {RUN_ID} 的 project-root 并继续",
+          "nexus_args": ["approve-and-continue", "{RUN_ID}", "project-root"]
+        }
+      ]
+    },
+    {
+      "id": "real_02_forge_manager_workflow_rebuild",
+      "title": "Rebuild a forge-manager-class workflow project from real project evidence",
+      "project_path": "{E2E_ROOT}/projects/forge_manager_workflow_rebuild",
+      "requires_external_side_effect": false,
+      "source_projects": ["forge-manager"],
+      "problem_targets": ["intent_understanding", "reference_reading_record", "domain_workflows", "monitor_next_prompt"],
+      "expected_behavior": "Nexus should read forge-manager docs/history and create an isolated workflow project that manages local Forge projects, tasks, activity, deep links, status reports, and dashboard boundaries. It must preserve the rule that state answers come from the local CLI, not memory summaries.",
+      "pass_requirements": [
+        "The target project defines project/task/conversation semantics and output shape.",
+        "The output includes collectors/report/dashboard or equivalent workflow modules.",
+        "The output records forge-manager project docs and activity histories as source evidence.",
+        "The operation guide gives concrete commands and next $nexus-workflow prompts.",
+        "The monitor/status surface can distinguish running/stale/planned/blocked/idle/history states."
+      ],
+      "steps": [
+        {
+          "id": "init_forge_manager_rebuild",
+          "prompt": "$nexus-workflow 初始化自动化测试项目：参考 <FORGE_ROOT>/forge-manager 和 <FORGE_ROOT>/codex_history/06121813-forge-change-lines-history.md，从零构建一个名为 forge_manager_workflow_rebuild 的隔离测试项目，用来复现 forge-manager 这类可用 workflow 项目的通用能力。参考项目只读，不要改 forge-manager。父目录 {E2E_ROOT}/projects。不要同步 GitHub，不要同步飞书。",
+          "nexus_args": [
+            "init-project",
+            "参考 <FORGE_ROOT>/forge-manager 和 <FORGE_ROOT>/codex_history/06121813-forge-change-lines-history.md，从零构建一个名为 forge_manager_workflow_rebuild 的隔离测试项目，用来复现 forge-manager 这类可用 workflow 项目的通用能力。必须理解它是本地项目管理器，读取真实项目、Git、Codex、Nexus Lab、Verix 产物，输出结构、状态、项目视图、深链和 dashboard。参考项目只读，不要改 forge-manager。父目录 {E2E_ROOT}/projects。",
+            "--parent",
+            "{E2E_ROOT}/projects",
+            "--provider",
+            "auto",
+            "--raw-user-request",
+            "$nexus-workflow 初始化自动化测试项目：参考 <FORGE_ROOT>/forge-manager 和 <FORGE_ROOT>/codex_history/06121813-forge-change-lines-history.md，从零构建一个名为 forge_manager_workflow_rebuild 的隔离测试项目，用来复现 forge-manager 这类可用 workflow 项目的通用能力。参考项目只读，不要改 forge-manager。父目录 {E2E_ROOT}/projects。不要同步 GitHub，不要同步飞书。",
+            "--no-github-sync",
+            "--no-feishu-sync"
+          ]
+        },
+        {
+          "id": "approve_project_root",
+          "prompt": "$nexus-workflow 审批 {RUN_ID} 的 project-root 并继续",
+          "nexus_args": ["approve-and-continue", "{RUN_ID}", "project-root"]
+        }
+      ]
+    },
+    {
+      "id": "real_03_feeler_skill_rebuild",
+      "title": "Rebuild a feeler-class skill workspace from success evidence",
+      "project_path": "{E2E_ROOT}/projects/feeler_skill_rebuild",
+      "requires_external_side_effect": false,
+      "source_projects": ["feeler"],
+      "problem_targets": ["intent_understanding", "reference_reading_record", "domain_workflows", "validation_script", "anti_hardcoding"],
+      "expected_behavior": "Nexus should read the real feeler workspace and construction history, then create an isolated skill-style workspace that captures the dynamic resume/interview/learning loop, not a generic project shell. It must preserve human-readable Chinese docs, read/copy_ready/file_library separation, TeX version rules, workflows, schemas, and validator.",
+      "pass_requirements": [
+        "The output explains the resume claim -> evidence -> interview question -> gap -> learning project -> resume iteration loop.",
+        "The output has human-readable Chinese docs and direct reading surfaces.",
+        "The output separates read, copy_ready, file_library or equivalent user-facing/source/backup areas.",
+        "The output records the feeler construction history and source docs as read sources.",
+        "The output includes a validator and TeX/copy-ready maintenance rules if LaTeX is included."
+      ],
+      "steps": [
+        {
+          "id": "init_feeler_rebuild",
+          "prompt": "$nexus-workflow 初始化自动化测试项目：参考 <FORGE_ROOT>/feeler、<FORGE_ROOT>/codex_history/06162225-feeler-current-thread-history.md 和 <LOCAL_PATH_REDACTED> feeler_skill_rebuild 的隔离测试项目，用来复现 feeler 这类成功 skill/workspace 项目的质量。参考项目只读，不要改 feeler。父目录 {E2E_ROOT}/projects。不要同步 GitHub，不要同步飞书。",
+          "nexus_args": [
+            "init-project",
+            "参考 <FORGE_ROOT>/feeler、<FORGE_ROOT>/codex_history/06162225-feeler-current-thread-history.md 和 <LOCAL_PATH_REDACTED> feeler_skill_rebuild 的隔离测试项目，用来复现 feeler 这类成功 skill/workspace 项目的质量。必须理解它不是一次性简历润色，而是简历声明、项目证据、面试追问、回答表现、能力缺口、补习项目和简历迭代的动态闭环。参考项目只读，不要改 feeler。父目录 {E2E_ROOT}/projects。",
+            "--parent",
+            "{E2E_ROOT}/projects",
+            "--provider",
+            "auto",
+            "--raw-user-request",
+            "$nexus-workflow 初始化自动化测试项目：参考 <FORGE_ROOT>/feeler、<FORGE_ROOT>/codex_history/06162225-feeler-current-thread-history.md 和 <LOCAL_PATH_REDACTED> feeler_skill_rebuild 的隔离测试项目，用来复现 feeler 这类成功 skill/workspace 项目的质量。参考项目只读，不要改 feeler。父目录 {E2E_ROOT}/projects。不要同步 GitHub，不要同步飞书。",
+            "--no-github-sync",
+            "--no-feishu-sync"
+          ]
+        },
+        {
+          "id": "approve_project_root",
+          "prompt": "$nexus-workflow 审批 {RUN_ID} 的 project-root 并继续",
+          "nexus_args": ["approve-and-continue", "{RUN_ID}", "project-root"]
+        }
+      ]
+    },
+    {
+      "id": "real_04_thesis_skill_rebuild",
+      "title": "Rebuild a thesis-class skill workspace from real project evidence",
+      "project_path": "{E2E_ROOT}/projects/thesis_skill_rebuild",
+      "requires_external_side_effect": false,
+      "source_projects": ["thesis"],
+      "problem_targets": ["intent_understanding", "reference_reading_record", "domain_workflows", "validation_script"],
+      "expected_behavior": "Nexus should create an isolated thesis-style skill workspace that understands opening report, midterm, defense, official sources, template-preserving Word .doc rules, and external code/manuscript shadow boundaries.",
+      "pass_requirements": [
+        "The output records official PDFs, templates, admin consultation, and shadow directories as source materials.",
+        "The output distinguishes official text, template inference, admin consultation, and Codex inference.",
+        "The output includes workflows for opening report, midterm, defense, template-preserving document editing, and render/QA.",
+        "The output does not create fake remote sync scripts without host/path/conflict information.",
+        "The output includes a validator or QA checklist for materials, links, templates, and output formats."
+      ],
+      "steps": [
+        {
+          "id": "init_thesis_rebuild",
+          "prompt": "$nexus-workflow 初始化自动化测试项目：参考 <FORGE_ROOT>/thesis、<FORGE_ROOT>/thesis/AGENTS.md 和 <LOCAL_PATH_REDACTED> thesis_skill_rebuild 的隔离测试项目，用来复现 thesis 这类论文流程 skill/workspace 的通用能力。参考项目只读，不要改 thesis。父目录 {E2E_ROOT}/projects。不要同步 GitHub，不要同步飞书。",
+          "nexus_args": [
+            "init-project",
+            "参考 <FORGE_ROOT>/thesis、<FORGE_ROOT>/thesis/AGENTS.md 和 <LOCAL_PATH_REDACTED> thesis_skill_rebuild 的隔离测试项目，用来复现 thesis 这类论文流程 skill/workspace 的通用能力。必须理解开题、中期、答辩、官方依据优先、模板保格式、.doc 模板副本填空、外部代码和论文影子目录边界。参考项目只读，不要改 thesis。父目录 {E2E_ROOT}/projects。",
+            "--parent",
+            "{E2E_ROOT}/projects",
+            "--provider",
+            "auto",
+            "--raw-user-request",
+            "$nexus-workflow 初始化自动化测试项目：参考 <FORGE_ROOT>/thesis、<FORGE_ROOT>/thesis/AGENTS.md 和 <LOCAL_PATH_REDACTED> thesis_skill_rebuild 的隔离测试项目，用来复现 thesis 这类论文流程 skill/workspace 的通用能力。参考项目只读，不要改 thesis。父目录 {E2E_ROOT}/projects。不要同步 GitHub，不要同步飞书。",
+            "--no-github-sync",
+            "--no-feishu-sync"
+          ]
+        },
+        {
+          "id": "approve_project_root",
+          "prompt": "$nexus-workflow 审批 {RUN_ID} 的 project-root 并继续",
+          "nexus_args": ["approve-and-continue", "{RUN_ID}", "project-root"]
+        }
+      ]
+    },
+    {
+      "id": "real_05_probe_failure_contrast",
+      "title": "Rebuild probe from history and contrast with feeler success",
+      "project_path": "{E2E_ROOT}/projects/probe_rebuild_from_history",
+      "requires_external_side_effect": false,
+      "source_projects": ["probe", "feeler"],
+      "problem_targets": ["intent_capture", "intent_understanding", "reference_reading_record", "search_plan_log", "domain_workflows", "anti_hardcoding"],
+      "expected_behavior": "Nexus should use the original probe init history and the feeler success project as contrast evidence. It should create an isolated project that actually implements the connected resume/interview/learning/project-evidence loop. It must fail evaluation if it only reproduces current probe's shallow governance docs and project-name story.",
+      "pass_requirements": [
+        "The output records <FORGE_ROOT>/codex_history/06162211-probe-init-history.md as a source and extracts concrete project requirements from it.",
+        "The output uses feeler as a quality reference without copying feeler-specific content.",
+        "The output contains detailed intent understanding, not only the project name explanation.",
+        "The output contains workflows for resume update, interview Q&A, interview result logging, knowledge gaps, training project prompt generation, and feedback into resume/project statements.",
+        "The output explains what current probe lacks and how the rebuilt project fixes the general Nexus capability gap."
+      ],
+      "steps": [
+        {
+          "id": "init_probe_contrast",
+          "prompt": "$nexus-workflow 初始化自动化测试项目：参考 <FORGE_ROOT>/codex_history/06162211-probe-init-history.md、当前 <FORGE_ROOT>/probe，以及成功对照 <FORGE_ROOT>/feeler，从零构建一个名为 probe_rebuild_from_history 的隔离测试项目。目标是证明 Nexus 能从历史中理解真实意图，而不是像 probe 只产出一两句项目说明。参考项目只读，不要改 probe 或 feeler。父目录 {E2E_ROOT}/projects。不要同步 GitHub，不要同步飞书。",
+          "nexus_args": [
+            "init-project",
+            "参考 <FORGE_ROOT>/codex_history/06162211-probe-init-history.md、当前 <FORGE_ROOT>/probe，以及成功对照 <FORGE_ROOT>/feeler，从零构建一个名为 probe_rebuild_from_history 的隔离测试项目。目标是证明 Nexus 能从历史中理解真实意图，而不是像 probe 只产出一两句项目说明。必须抽取简历修改、面试辅助、面试记录、简历迭代、基础知识补习、训练项目 prompt、forge/ifome/Python ML/C++ MPI 项目证据访问和在线搜索边界。参考项目只读，不要改 probe 或 feeler。父目录 {E2E_ROOT}/projects。",
+            "--parent",
+            "{E2E_ROOT}/projects",
+            "--provider",
+            "auto",
+            "--raw-user-request",
+            "$nexus-workflow 初始化自动化测试项目：参考 <FORGE_ROOT>/codex_history/06162211-probe-init-history.md、当前 <FORGE_ROOT>/probe，以及成功对照 <FORGE_ROOT>/feeler，从零构建一个名为 probe_rebuild_from_history 的隔离测试项目。目标是证明 Nexus 能从历史中理解真实意图，而不是像 probe 只产出一两句项目说明。参考项目只读，不要改 probe 或 feeler。父目录 {E2E_ROOT}/projects。不要同步 GitHub，不要同步飞书。",
+            "--no-github-sync",
+            "--no-feishu-sync"
+          ]
+        },
+        {
+          "id": "approve_project_root",
+          "prompt": "$nexus-workflow 审批 {RUN_ID} 的 project-root 并继续",
+          "nexus_args": ["approve-and-continue", "{RUN_ID}", "project-root"]
+        }
+      ]
+    },
+    {
+      "id": "real_06_orbit_wechat_intent_repair",
+      "title": "Repair orbit-class intent understanding with the WeChat subproject as partial success evidence",
+      "project_path": "{E2E_ROOT}/projects/orbit_wechat_rebuild",
+      "requires_external_side_effect": false,
+      "source_projects": ["orbit"],
+      "problem_targets": ["intent_understanding", "reference_reading_record", "domain_workflows", "recovery_rebind", "playbook_persistence"],
+      "expected_behavior": "Nexus should rebuild orbit's real intent around WeChat, email, news, interview experience, separated databases, visual frontend, editable drafts, and strict manual send approval. It should incorporate apps/wechat-assistant as partial good evidence while preserving the wider project intent.",
+      "pass_requirements": [
+        "The output records <LOCAL_PATH_REDACTED> and orbit/apps/wechat-assistant as sources.",
+        "The output does not collapse orbit into generic wljob/job search wording.",
+        "The output separates WeChat data, email data, news data, and public project-generation data.",
+        "The output includes UI/front-end workflows for source-linked chat views, context selection, instruction boxes, editable drafts, and audit history.",
+        "The output preserves OpenClaw VM and WeChat safety boundaries as blocked or approval-gated conditions."
+      ],
+      "steps": [
+        {
+          "id": "init_orbit_rebuild",
+          "prompt": "$nexus-workflow 初始化自动化测试项目：参考 <LOCAL_PATH_REDACTED> <FORGE_ROOT>/orbit 和 <FORGE_ROOT>/orbit/apps/wechat-assistant，从零构建一个名为 orbit_wechat_rebuild 的隔离测试项目。目标是修复 orbit 类项目中 Nexus 没有有效理解初始意图的问题，同时吸收微信子项目中已经较好的构建边界。参考项目只读，不要改 orbit。父目录 {E2E_ROOT}/projects。不要同步 GitHub，不要同步飞书。",
+          "nexus_args": [
+            "init-project",
+            "参考 <LOCAL_PATH_REDACTED> <FORGE_ROOT>/orbit 和 <FORGE_ROOT>/orbit/apps/wechat-assistant，从零构建一个名为 orbit_wechat_rebuild 的隔离测试项目。必须理解微信指定对话只读同步、邮件整理、早中晚提醒、岗位信息收集、新闻采集、面试经验整理、数据库隔离、前端可视化、可编辑回复草稿、人工发送审批、OpenClaw VM 阻断和恢复记录。参考项目只读，不要改 orbit。父目录 {E2E_ROOT}/projects。",
+            "--parent",
+            "{E2E_ROOT}/projects",
+            "--provider",
+            "auto",
+            "--raw-user-request",
+            "$nexus-workflow 初始化自动化测试项目：参考 <LOCAL_PATH_REDACTED> <FORGE_ROOT>/orbit 和 <FORGE_ROOT>/orbit/apps/wechat-assistant，从零构建一个名为 orbit_wechat_rebuild 的隔离测试项目。目标是修复 orbit 类项目中 Nexus 没有有效理解初始意图的问题，同时吸收微信子项目中已经较好的构建边界。参考项目只读，不要改 orbit。父目录 {E2E_ROOT}/projects。不要同步 GitHub，不要同步飞书。",
+            "--no-github-sync",
+            "--no-feishu-sync"
+          ]
+        },
+        {
+          "id": "approve_project_root",
+          "prompt": "$nexus-workflow 审批 {RUN_ID} 的 project-root 并继续",
+          "nexus_args": ["approve-and-continue", "{RUN_ID}", "project-root"]
+        }
+      ]
+    },
+    {
+      "id": "real_07_wljob_heat_local_sequence",
+      "title": "Run the local-safe portion of the wljob heat E2E command sequence",
+      "project_path": "{E2E_ROOT}/projects/wljob_heat_rebuild",
+      "requires_external_side_effect": false,
+      "source_projects": ["wljob"],
+      "problem_targets": ["intent_capture", "intent_understanding", "search_plan_log", "monitor_next_prompt", "sync_artifacts"],
+      "expected_behavior": "This case converts the wljob one-sentence E2E command file into an executable local-safe sequence. Nexus should preserve standardized interaction output, absolute Nexus root usage, provider status visibility, wljob-vs-wlzuu intent priority, research artifacts, update-intent behavior, and board/monitor next prompts.",
+      "pass_requirements": [
+        "Every step should produce standardized interaction output with status, output, and next $nexus-workflow prompt.",
+        "The target project treats <LOCAL_PATH_REDACTED> as the main source and wlzuu only as history.",
+        "Research should write plan/log/source status or block with a concrete approval/provider reason.",
+        "Board and monitor steps should expose current phase, run_id, blocker, and next prompt.",
+        "No GitHub public, Feishu publish, browser login, or external submission should run in this local-safe case."
+      ],
+      "steps": [
+        {
+          "id": "check_skill",
+          "prompt": "$nexus-workflow 检查当前 nexus workflow 是否安装并可用",
+          "nexus_args": ["skill", "doctor"]
+        },
+        {
+          "id": "model_status",
+          "prompt": "$nexus-workflow 查看当前可用的基座模型和 provider 状态",
+          "nexus_args": ["model", "status"]
+        },
+        {
+          "id": "init_wljob_heat",
+          "prompt": "$nexus-workflow 初始化项目：参考 <LOCAL_PATH_REDACTED> 中的 wljob 项目意图和验收边界，从零新建一个名为 wljob_heat_rebuild 的隔离测试项目，用于中文互联网求职、网申流程、岗位信息整理、自动化执行前的安全规划和项目记录管理；父目录为 {E2E_ROOT}/projects；不同步 GitHub；不同步飞书",
+          "nexus_args": [
+            "init-project",
+            "参考 <LOCAL_PATH_REDACTED> 中的 wljob 项目意图和验收边界，从零新建一个名为 wljob_heat_rebuild 的隔离测试项目，用于中文互联网求职、网申流程、岗位信息整理、自动化执行前的安全规划和项目记录管理。wljob_project_intent.md 是主需求来源，wlzuu 只是历史参考案例。父目录 {E2E_ROOT}/projects。",
+            "--parent",
+            "{E2E_ROOT}/projects",
+            "--provider",
+            "auto",
+            "--raw-user-request",
+            "$nexus-workflow 初始化项目：参考 <LOCAL_PATH_REDACTED> 中的 wljob 项目意图和验收边界，从零新建一个名为 wljob_heat_rebuild 的隔离测试项目，用于中文互联网求职、网申流程、岗位信息整理、自动化执行前的安全规划和项目记录管理；父目录为 {E2E_ROOT}/projects；不同步 GitHub；不同步飞书",
+            "--no-github-sync",
+            "--no-feishu-sync"
+          ]
+        },
+        {
+          "id": "approve_project_root",
+          "prompt": "$nexus-workflow 审批 {RUN_ID} 的 project-root 并继续",
+          "nexus_args": ["approve-and-continue", "{RUN_ID}", "project-root"]
+        },
+        {
+          "id": "research_without_online_approval",
+          "prompt": "$nexus-workflow 调研项目 {PROJECT_PATH}：参考 <LOCAL_PATH_REDACTED> 中的 wljob 项目意图，检查中文互联网和 GitHub/Gitee/官方文档中是否已有完整可复用的求职网申 workflow、岗位追踪、对话沉淀、飞书文档同步或自动化执行 kernel",
+          "nexus_args": [
+            "research",
+            "参考 <LOCAL_PATH_REDACTED> 中的 wljob 项目意图，检查中文互联网和 GitHub/Gitee/官方文档中是否已有完整可复用的求职网申 workflow、岗位追踪、对话沉淀、飞书文档同步或自动化执行 kernel",
+            "--project-root",
+            "{PROJECT_PATH}",
+            "--provider",
+            "auto",
+            "--approval-policy",
+            "ask",
+            "--max-candidates",
+            "12"
+          ]
+        },
+        {
+          "id": "approve_online_search_continue",
+          "prompt": "$nexus-workflow 审批 {RUN_ID} 的 online-search 并继续",
+          "nexus_args": ["approve-and-continue", "{RUN_ID}", "online-search"]
+        },
+        {
+          "id": "view_final_report",
+          "prompt": "$nexus-workflow 查看 {RUN_ID} 的报告",
+          "nexus_args": ["report", "{RUN_ID}"]
+        },
+        {
+          "id": "update_intent",
+          "prompt": "$nexus-workflow 更新上一个项目意图：wljob 不是只服务某一次求职，而是一个通用中文互联网求职/网申工作流 kernel；<LOCAL_PATH_REDACTED> 是主需求来源，wlzuu 只是历史参考案例",
+          "nexus_args": [
+            "invoke",
+            "$nexus-workflow 更新上一个项目意图：wljob 不是只服务某一次求职，而是一个通用中文互联网求职/网申工作流 kernel；<LOCAL_PATH_REDACTED> 是主需求来源，wlzuu 只是历史参考案例"
+          ]
+        },
+        {
+          "id": "board_show",
+          "prompt": "$nexus-workflow 查看记录板",
+          "nexus_args": ["board", "show"]
+        }
+      ]
+    },
+    {
+      "id": "real_08_sync_and_external_boundary_contract",
+      "title": "Check external sync/public/Feishu boundary contracts using real projects",
+      "project_path": "<FORGE_ROOT>/wljob",
+      "requires_external_side_effect": true,
+      "source_projects": ["codpm", "forge-manager", "wljob", "nexus"],
+      "problem_targets": ["sync_artifacts", "recovery_rebind", "playbook_persistence", "monitor_next_prompt"],
+      "expected_behavior": "This case is intentionally side-effect gated. It checks the same class of commands from the wljob heat file: self-sync, GitHub public confirmation, Feishu guide sync, GitHub auth EOF recovery, and standardized blocked next prompts. It must be refused unless --allow-external-side-effects is provided.",
+      "pass_requirements": [
+        "Without --allow-external-side-effects the harness must refuse before running self-sync or public sync.",
+        "With explicit allowance, Nexus must write artifacts proving private sync, Feishu sync/writeback, private resync, public staging, secret scan, validation, and fresh clone where applicable.",
+        "GitHub auth EOF or Feishu permission failure must produce blocked reasons and same-run continuation prompts.",
+        "Public publish must remain explicit and separate from private sync.",
+        "No step may read tokens, cookies, browser profiles, SSH keys, .env, passwords, or 2FA/CAPTCHA content."
+      ],
+      "steps": [
+        {
+          "id": "wljob_self_sync",
+          "requires_external_side_effect": true,
+          "prompt": "$nexus-workflow 执行项目 <FORGE_ROOT>/wljob 的自同步。要求先同步 GitHub private；如果飞书配置可用，再同步整体操作指南到飞书；如果飞书同步写回了本地绑定或记录，再追加一次 GitHub private 同步保存写回结果。不要执行 GitHub public 发布，除非我另行明确确认。",
+          "nexus_args": [
+            "self-sync",
+            "--project-path",
+            "<FORGE_ROOT>/wljob",
+            "--target",
+            "project"
+          ]
+        },
+        {
+          "id": "wljob_public_sync",
+          "requires_external_side_effect": true,
+          "prompt": "$nexus-workflow 同步到 GitHub public，项目路径 <FORGE_ROOT>/wljob，确认 public 发布。public staging 必须做 secret/private metadata scan，并做可安装/可读取验证。",
+          "nexus_args": [
+            "github-sync",
+            "public",
+            "--project-path",
+            "<FORGE_ROOT>/wljob",
+            "--confirm"
+          ]
+        },
+        {
+          "id": "nexus_guide_feishu",
+          "requires_external_side_effect": true,
+          "prompt": "$nexus-workflow 同步 Nexus 整体操作指南到飞书，项目路径 <PROJECT_ROOT>",
+          "nexus_args": [
+            "guide",
+            "publish-feishu",
+            "--project-path",
+            "<PROJECT_ROOT>",
+            "--target",
+            "nexus"
+          ]
+        }
+      ]
+    }
+  ]
+}

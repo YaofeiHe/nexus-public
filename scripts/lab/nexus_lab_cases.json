@@ -1,0 +1,345 @@
+{
+  "schema": "nexus.lab.cases.v1",
+  "source_documents": [
+    "docs/lab/sample_project_baseline.md",
+    "docs/lab/nexus_e2e_instruction_tests.md",
+    "docs/lab/nexus_agent_loop_entrypoints.md",
+    "scripts/lab/nexus_problem_matrix.json"
+  ],
+  "notes": [
+    "Cases are executable command templates for the lab execution agent. They call python -m nexus.cli and do not use mock providers.",
+    "Local init-style cases pass --no-github-sync and --no-feishu-sync so the first harness can exercise project creation without external writes.",
+    "Sync, GitHub public, and Feishu cases are marked requires_external_side_effect and are refused unless the runner receives --allow-external-side-effects.",
+    "Every structured case is evaluated against every problem axis in scripts/lab/nexus_problem_matrix.json. Do not use one sample to cover only one issue."
+  ],
+  "cases": [
+    {
+      "id": "test_01_complex_init",
+      "title": "Complex Project Initialization Without Template Leakage",
+      "requires_external_side_effect": false,
+      "steps": [
+        {
+          "id": "initial_init",
+          "prompt": "$nexus-workflow 从零初始化一个项目：我需要一个面向非营利组织项目申请的工作区，帮助我把资助方要求、项目预算、受益人证据、申请材料草稿、提交截止日期和后续复盘联系起来。它要能记录原始申请意图，把不同资助方的要求拆成可比较字段，生成材料准备 workflow，保留证据来源，最后要有一个本地验证脚本检查关键文件是否齐全。不要给项目固定命名，让 Nexus 自己推荐并说明命名依据。父目录 {E2E_ROOT}/projects。",
+          "nexus_args": [
+            "init-project",
+            "我需要一个面向非营利组织项目申请的工作区，帮助我把资助方要求、项目预算、受益人证据、申请材料草稿、提交截止日期和后续复盘联系起来。它要能记录原始申请意图，把不同资助方的要求拆成可比较字段，生成材料准备 workflow，保留证据来源，最后要有一个本地验证脚本检查关键文件是否齐全。不要给项目固定命名，让 Nexus 自己推荐并说明命名依据。父目录 {E2E_ROOT}/projects。",
+            "--parent",
+            "{E2E_ROOT}/projects",
+            "--provider",
+            "auto",
+            "--raw-user-request",
+            "$nexus-workflow 从零初始化一个项目：我需要一个面向非营利组织项目申请的工作区，帮助我把资助方要求、项目预算、受益人证据、申请材料草稿、提交截止日期和后续复盘联系起来。它要能记录原始申请意图，把不同资助方的要求拆成可比较字段，生成材料准备 workflow，保留证据来源，最后要有一个本地验证脚本检查关键文件是否齐全。不要给项目固定命名，让 Nexus 自己推荐并说明命名依据。父目录 {E2E_ROOT}/projects。",
+            "--no-github-sync",
+            "--no-feishu-sync"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "test_02_supplemental_init",
+      "title": "Supplemental Requirement Update Without Destructive Reinitialization",
+      "requires_external_side_effect": false,
+      "steps": [
+        {
+          "id": "supplement_project",
+          "prompt": "$nexus-workflow 对项目 {PROJECT_PATH} 补充初始化：新增一个“资助方反馈复盘”流程，要求记录被拒理由、需要补充的证据、下次申请窗口、负责人和下一步动作。不要清空、重建、覆盖已有业务文档；只补齐 Nexus 管理的意图、项目说明、操作指南、记录板、同步配置和必要索引。",
+          "nexus_args": [
+            "supplement-init",
+            "--project-path",
+            "{PROJECT_PATH}",
+            "--idea",
+            "新增一个“资助方反馈复盘”流程，要求记录被拒理由、需要补充的证据、下次申请窗口、负责人和下一步动作。不要清空、重建、覆盖已有业务文档；只补齐 Nexus 管理的意图、项目说明、操作指南、记录板、同步配置和必要索引。",
+            "--target",
+            "project",
+            "--no-github-sync",
+            "--no-feishu-sync"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "test_03_reference_reading_record",
+      "title": "Local History and Reference Material Reading Record",
+      "requires_external_side_effect": false,
+      "fixtures": [
+        {
+          "path": "reference_pack/strategy_notes.md",
+          "content": "# Strategy notes\n\nBuild a field incident review workspace with incident intake, root-cause notes, owner assignment, remediation verification, and weekly leadership summary.\n"
+        },
+        {
+          "path": "reference_pack/prior_chat_excerpt.md",
+          "content": "# Prior chat excerpt\n\nCorrections from the user: examples are not scope limits; record every skipped source; never summarize search as only completed.\n"
+        },
+        {
+          "path": "reference_pack/existing_files_index.md",
+          "content": "# Existing files index\n\nExpected files to consider during initialization: incident taxonomy notes, weekly summary template, remediation checklist, owner roster, and evidence index.\n"
+        }
+      ],
+      "steps": [
+        {
+          "id": "init_from_reference_pack",
+          "prompt": "$nexus-workflow 从零初始化一个项目：根据 {FIXTURE_DIR}/reference_pack/strategy_notes.md、{FIXTURE_DIR}/reference_pack/prior_chat_excerpt.md 和 {FIXTURE_DIR}/reference_pack/existing_files_index.md 构建一个现场事故复盘工作区。必须先记录读取/检索计划，说明每个文件要解决什么问题；再记录实际读取结果、提取出的需求、没有读到或仍不确定的内容；最后再生成项目结构。父目录 {E2E_ROOT}/projects。",
+          "nexus_args": [
+            "init-project",
+            "根据 {FIXTURE_DIR}/reference_pack/strategy_notes.md、{FIXTURE_DIR}/reference_pack/prior_chat_excerpt.md 和 {FIXTURE_DIR}/reference_pack/existing_files_index.md 构建一个现场事故复盘工作区。必须先记录读取/检索计划，说明每个文件要解决什么问题；再记录实际读取结果、提取出的需求、没有读到或仍不确定的内容；最后再生成项目结构。父目录 {E2E_ROOT}/projects。",
+            "--parent",
+            "{E2E_ROOT}/projects",
+            "--provider",
+            "auto",
+            "--raw-user-request",
+            "$nexus-workflow 从零初始化一个项目：根据 {FIXTURE_DIR}/reference_pack/strategy_notes.md、{FIXTURE_DIR}/reference_pack/prior_chat_excerpt.md 和 {FIXTURE_DIR}/reference_pack/existing_files_index.md 构建一个现场事故复盘工作区。必须先记录读取/检索计划，说明每个文件要解决什么问题；再记录实际读取结果、提取出的需求、没有读到或仍不确定的内容；最后再生成项目结构。父目录 {E2E_ROOT}/projects。",
+            "--no-github-sync",
+            "--no-feishu-sync"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "test_04_sync_paths",
+      "title": "Sync Behavior Across Private, Feishu, and Public Paths",
+      "requires_external_side_effect": true,
+      "external_side_effects": [
+        "github_private_sync",
+        "feishu_publish_or_sync",
+        "github_public_publish"
+      ],
+      "steps": [
+        {
+          "id": "self_sync",
+          "requires_external_side_effect": true,
+          "prompt": "$nexus-workflow 执行项目 {PROJECT_PATH} 的自同步。要求先同步 GitHub private；如果飞书配置可用，再同步整体操作指南到飞书；如果飞书同步写回了本地绑定或记录，再追加一次 GitHub private 同步保存写回结果。不要执行 GitHub public 发布，除非我另行明确确认。",
+          "nexus_args": [
+            "self-sync",
+            "--project-path",
+            "{PROJECT_PATH}",
+            "--target",
+            "project"
+          ]
+        },
+        {
+          "id": "public_sync",
+          "requires_external_side_effect": true,
+          "prompt": "$nexus-workflow 同步到 GitHub public，项目路径 {PROJECT_PATH}，确认 public 发布。public staging 必须做 secret/private metadata scan，并做可安装/可读取验证。",
+          "nexus_args": [
+            "github-sync",
+            "public",
+            "--project-path",
+            "{PROJECT_PATH}",
+            "--confirm"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "test_05_debug_handoff_rebind",
+      "title": "External Codex Debug Handoff and Same-Run Rebind",
+      "requires_external_side_effect": false,
+      "steps": [
+        {
+          "id": "start_plan_request",
+          "prompt": "$nexus-workflow 对项目 {PROJECT_PATH} 生成一个实现计划：修复当前验证失败，使项目验证脚本能够检查 intent、source index、operation guide 和 workflow 文档是否齐全。计划通过后进入 code-change，并在需要本地 debug 时必须先登记 debug handoff。",
+          "nexus_args": [
+            "invoke",
+            "$nexus-workflow 对项目 {PROJECT_PATH} 生成一个实现计划：修复当前验证失败，使项目验证脚本能够检查 intent、source index、operation guide 和 workflow 文档是否齐全。计划通过后进入 code-change，并在需要本地 debug 时必须先登记 debug handoff。"
+          ]
+        },
+        {
+          "id": "register_debug_handoff",
+          "prompt": "$nexus-workflow 脱离 workflow 进行 debug 并登记：修复验证脚本或 code-change 阻断，run_id {RUN_ID}",
+          "nexus_args": [
+            "handoff-for-debug",
+            "{RUN_ID}",
+            "修复验证脚本或 code-change 阻断"
+          ]
+        },
+        {
+          "id": "append_diagnose_worklog",
+          "prompt": "$nexus-workflow 登记 debug 诊断，run_id {RUN_ID}，handoff_id {HANDOFF_ID}，kind diagnose，说明：定位验证失败/阻断根因",
+          "nexus_args": [
+            "append-debug-worklog",
+            "{RUN_ID}",
+            "--handoff-id",
+            "{HANDOFF_ID}",
+            "--kind",
+            "diagnose",
+            "--summary",
+            "定位验证失败/阻断根因"
+          ]
+        },
+        {
+          "id": "append_edit_worklog",
+          "prompt": "$nexus-workflow 登记 debug 修改，run_id {RUN_ID}，handoff_id {HANDOFF_ID}，kind edit，说明：完成最小必要修复并记录变更路径",
+          "nexus_args": [
+            "append-debug-worklog",
+            "{RUN_ID}",
+            "--handoff-id",
+            "{HANDOFF_ID}",
+            "--kind",
+            "edit",
+            "--summary",
+            "完成最小必要修复并记录变更路径"
+          ]
+        },
+        {
+          "id": "append_test_worklog",
+          "prompt": "$nexus-workflow 登记 debug 测试，run_id {RUN_ID}，handoff_id {HANDOFF_ID}，kind test，说明：验证脚本或 pytest 通过",
+          "nexus_args": [
+            "append-debug-worklog",
+            "{RUN_ID}",
+            "--handoff-id",
+            "{HANDOFF_ID}",
+            "--kind",
+            "test",
+            "--summary",
+            "验证脚本或 pytest 通过",
+            "--result",
+            "passed"
+          ]
+        },
+        {
+          "id": "rebind",
+          "prompt": "$nexus-workflow 回跳到刚才的 workflow，run_id {RUN_ID}，handoff_id {HANDOFF_ID}",
+          "nexus_args": [
+            "rebind-and-continue",
+            "{RUN_ID}",
+            "--handoff-id",
+            "{HANDOFF_ID}"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "test_06_recovery_playbook_reuse",
+      "title": "Recovery Playbook Persistence and Reuse",
+      "requires_external_side_effect": false,
+      "steps": [
+        {
+          "id": "approve_recovery_playbook",
+          "prompt": "$nexus-workflow 审批 {RUN_ID} 的 recovery-playbook，把这次 debug handoff/rebind 成功经验沉淀到项目恢复记录。",
+          "nexus_args": [
+            "approve",
+            "{RUN_ID}",
+            "recovery-playbook"
+          ]
+        },
+        {
+          "id": "second_similar_failure",
+          "prompt": "$nexus-workflow 在项目 {PROJECT_PATH} 上再次执行一个会触发相似验证阻断的修改流程。遇到问题时先查 recovery playbook 和相关恢复经验，再决定是否调用外部 Codex debug；不要直接开启一条全新的恢复思路。",
+          "nexus_args": [
+            "invoke",
+            "$nexus-workflow 在项目 {PROJECT_PATH} 上再次执行一个会触发相似验证阻断的修改流程。遇到问题时先查 recovery playbook 和相关恢复经验，再决定是否调用外部 Codex debug；不要直接开启一条全新的恢复思路。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "test_07_independent_evaluation_loop",
+      "title": "Verix-Style Independent Evaluation Feedback Loop",
+      "requires_external_side_effect": false,
+      "steps": [
+        {
+          "id": "invoke_evaluation_loop",
+          "prompt": "$nexus-workflow 对项目 {PROJECT_PATH} 启动 Verix 式独立评测：评测者必须独立读取 docs/intent/original-requirement.md、docs/intent/normalized-requirement.md、source-material-index、项目产物和验证脚本，模拟用户通过 skill 输入使用这个项目，判断结果是否满足初始意图。把失败点写成可执行修改要求，然后让 Nexus 根据这些要求继续规划修改。",
+          "nexus_args": [
+            "invoke",
+            "$nexus-workflow 对项目 {PROJECT_PATH} 启动 Verix 式独立评测：评测者必须独立读取 docs/intent/original-requirement.md、docs/intent/normalized-requirement.md、source-material-index、项目产物和验证脚本，模拟用户通过 skill 输入使用这个项目，判断结果是否满足初始意图。把失败点写成可执行修改要求，然后让 Nexus 根据这些要求继续规划修改。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "test_08_sample_external_variants",
+      "title": "Sample-External Variant Battery",
+      "requires_external_side_effect": false,
+      "steps": [
+        {
+          "id": "variant_a_museum",
+          "prompt": "$nexus-workflow 从零初始化一个项目：我要管理一个博物馆展览筹备工作区，包含策展主题、藏品来源、版权/授权状态、展陈空间限制、供应商任务、开幕前检查清单和观众反馈复盘。要求有项目意图记录、材料来源记录、工作流、验证脚本和同步策略。父目录 {E2E_ROOT}/projects/variants。",
+          "nexus_args": [
+            "init-project",
+            "我要管理一个博物馆展览筹备工作区，包含策展主题、藏品来源、版权/授权状态、展陈空间限制、供应商任务、开幕前检查清单和观众反馈复盘。要求有项目意图记录、材料来源记录、工作流、验证脚本和同步策略。父目录 {E2E_ROOT}/projects/variants。",
+            "--parent",
+            "{E2E_ROOT}/projects/variants",
+            "--provider",
+            "auto",
+            "--raw-user-request",
+            "$nexus-workflow 从零初始化一个项目：我要管理一个博物馆展览筹备工作区，包含策展主题、藏品来源、版权/授权状态、展陈空间限制、供应商任务、开幕前检查清单和观众反馈复盘。要求有项目意图记录、材料来源记录、工作流、验证脚本和同步策略。父目录 {E2E_ROOT}/projects/variants。",
+            "--no-github-sync",
+            "--no-feishu-sync"
+          ]
+        },
+        {
+          "id": "variant_b_open_source_maintainer",
+          "prompt": "$nexus-workflow 从零初始化一个项目：我要管理一个开源维护者值班工作区，包含 issue 分级、release blocker、回归测试证据、维护者交接、公共 README 发布检查和事故恢复记录。要求能区分 private 维护记录和 public 发布材料。父目录 {E2E_ROOT}/projects/variants。",
+          "nexus_args": [
+            "init-project",
+            "我要管理一个开源维护者值班工作区，包含 issue 分级、release blocker、回归测试证据、维护者交接、公共 README 发布检查和事故恢复记录。要求能区分 private 维护记录和 public 发布材料。父目录 {E2E_ROOT}/projects/variants。",
+            "--parent",
+            "{E2E_ROOT}/projects/variants",
+            "--provider",
+            "auto",
+            "--raw-user-request",
+            "$nexus-workflow 从零初始化一个项目：我要管理一个开源维护者值班工作区，包含 issue 分级、release blocker、回归测试证据、维护者交接、公共 README 发布检查和事故恢复记录。要求能区分 private 维护记录和 public 发布材料。父目录 {E2E_ROOT}/projects/variants。",
+            "--no-github-sync",
+            "--no-feishu-sync"
+          ]
+        },
+        {
+          "id": "variant_c_language_learning",
+          "prompt": "$nexus-workflow 从零初始化一个项目：我要管理一个语言学习课程迭代工作区，包含学生初始诊断、每周练习计划、错题/表达问题、课程材料版本、模拟测评反馈和下一轮课程调整。要求生成面向教师使用的 workflow 和验证脚本。父目录 {E2E_ROOT}/projects/variants。",
+          "nexus_args": [
+            "init-project",
+            "我要管理一个语言学习课程迭代工作区，包含学生初始诊断、每周练习计划、错题/表达问题、课程材料版本、模拟测评反馈和下一轮课程调整。要求生成面向教师使用的 workflow 和验证脚本。父目录 {E2E_ROOT}/projects/variants。",
+            "--parent",
+            "{E2E_ROOT}/projects/variants",
+            "--provider",
+            "auto",
+            "--raw-user-request",
+            "$nexus-workflow 从零初始化一个项目：我要管理一个语言学习课程迭代工作区，包含学生初始诊断、每周练习计划、错题/表达问题、课程材料版本、模拟测评反馈和下一轮课程调整。要求生成面向教师使用的 workflow 和验证脚本。父目录 {E2E_ROOT}/projects/variants。",
+            "--no-github-sync",
+            "--no-feishu-sync"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "test_09_orchestrator_monitoring",
+      "title": "Orchestrator Monitoring Surface",
+      "requires_external_side_effect": false,
+      "steps": [
+        {
+          "id": "monitor_state",
+          "prompt": "$nexus-workflow 查看项目 {PROJECT_PATH} 的当前构建/测试/修改状态：告诉我当前阶段、关联 run_id、最近一次测试或评测结果、阻断原因、下一条可执行的 $nexus-workflow 指令，以及如果我要终止或人工介入应该使用什么提示。",
+          "nexus_args": [
+            "invoke",
+            "$nexus-workflow 查看项目 {PROJECT_PATH} 的当前构建/测试/修改状态：告诉我当前阶段、关联 run_id、最近一次测试或评测结果、阻断原因、下一条可执行的 $nexus-workflow 指令，以及如果我要终止或人工介入应该使用什么提示。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "test_10_anti_hardcoding_regression",
+      "title": "Anti-Hardcoding Regression Check",
+      "requires_external_side_effect": false,
+      "steps": [
+        {
+          "id": "robotics_regression_init",
+          "prompt": "$nexus-workflow 重新运行端到端能力验收，但换一个全新项目意图：我要管理一个跨校机器人比赛备赛工作区，包含规则阅读、零件采购、机械/电控/软件任务、测试场次、故障复盘、参赛材料提交和赛后总结。不要复用前面任何样例的领域词；只复用通用能力要求：初始意图记录、材料读取记录、工作流、验证、同步、恢复和评测反馈闭环。父目录 {E2E_ROOT}/projects/regression。",
+          "nexus_args": [
+            "init-project",
+            "我要管理一个跨校机器人比赛备赛工作区，包含规则阅读、零件采购、机械/电控/软件任务、测试场次、故障复盘、参赛材料提交和赛后总结。不要复用前面任何样例的领域词；只复用通用能力要求：初始意图记录、材料读取记录、工作流、验证、同步、恢复和评测反馈闭环。父目录 {E2E_ROOT}/projects/regression。",
+            "--parent",
+            "{E2E_ROOT}/projects/regression",
+            "--provider",
+            "auto",
+            "--raw-user-request",
+            "$nexus-workflow 重新运行端到端能力验收，但换一个全新项目意图：我要管理一个跨校机器人比赛备赛工作区，包含规则阅读、零件采购、机械/电控/软件任务、测试场次、故障复盘、参赛材料提交和赛后总结。不要复用前面任何样例的领域词；只复用通用能力要求：初始意图记录、材料读取记录、工作流、验证、同步、恢复和评测反馈闭环。父目录 {E2E_ROOT}/projects/regression。",
+            "--no-github-sync",
+            "--no-feishu-sync"
+          ]
+        }
+      ]
+    }
+  ]
+}

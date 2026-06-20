@@ -1,0 +1,142 @@
+{
+  "schema": "nexus.lab.completion_ledger.v1",
+  "generated_for": "Nexus-Verix monitor-level multi-agent self-repair system",
+  "status_values": ["done", "failed", "blocked", "not_started"],
+  "items": [
+    {
+      "id": "L01",
+      "user_goal": "根据 06191031 history 和当前补充要求，定义要构建的 Nexus-Verix 自修复系统、面对的问题和下一步启动路径。",
+      "required_entrypoint_or_chain": "docs/lab/monitor_multi_agent_system.md",
+      "implementation_location": "docs/lab/monitor_multi_agent_system.md",
+      "verification_or_observation": "build_nexus_lab_project.py required_files and monitor contract checks",
+      "external_permission_or_manual_action": "none",
+      "status": "done"
+    },
+    {
+      "id": "L02",
+      "user_goal": "用户输入“启动运行”后必须启动当前对话窗口作为 orchestrator 的真实 monitor-level multi-agent run。",
+      "required_entrypoint_or_chain": "python -m nexus.cli --root <PROJECT_ROOT> nexus-verix-monitor --init-run followed by multi_agent_v1.spawn_agent",
+      "implementation_location": "nexus/cli.py, scripts/lab/init_monitor_multi_agent_run.py, docs/lab/monitor_multi_agent_contract.md, docs/lab/monitor_agent_state.schema.json",
+      "verification_or_observation": "tests/test_cli.py, tests/test_monitor_multi_agent_launch.py and tests/test_monitor_multi_agent_contract.py",
+      "external_permission_or_manual_action": "Codex monitor must call multi_agent_v1; Python cannot do this internally",
+      "status": "done"
+    },
+    {
+      "id": "L03",
+      "user_goal": "支持按 workflow 逐条输入 `$nexus-workflow ...` 指令构建项目。",
+      "required_entrypoint_or_chain": "step_by_step_skill_workflow",
+      "implementation_location": "scripts/lab/init_monitor_multi_agent_run.py operation_modes, docs/lab/monitor_multi_agent_contract.md",
+      "verification_or_observation": "tests/test_monitor_multi_agent_contract.py checks operation mode and research continuation requirement",
+      "external_permission_or_manual_action": "online search, provider, GitHub, Feishu, and other external side effects still require explicit authorization",
+      "status": "done"
+    },
+    {
+      "id": "L04",
+      "user_goal": "支持只提供项目意图后默认多 agent 多轮构建、测试、审计、修改、回归。",
+      "required_entrypoint_or_chain": "default_autonomous_multi_agent_build",
+      "implementation_location": "scripts/lab/init_monitor_multi_agent_run.py operation_modes and agent task prompts",
+      "verification_or_observation": "tests/test_monitor_multi_agent_contract.py and launch packet inspection",
+      "external_permission_or_manual_action": "real execution may block on external provider or publish authorization",
+      "status": "done"
+    },
+    {
+      "id": "L05",
+      "user_goal": "普通用户新输入只能查询、补充或调整主流程，不能让主流程忘掉原任务或自动停止。",
+      "required_entrypoint_or_chain": "monitor instruction handling and false-stop recovery",
+      "implementation_location": "scripts/lab/update_monitor_multi_agent_run.py, scripts/lab/inspect_nexus_lab_status.py",
+      "verification_or_observation": "tests/test_monitor_multi_agent_update.py",
+      "external_permission_or_manual_action": "none",
+      "status": "done"
+    },
+    {
+      "id": "L06",
+      "user_goal": "把 Reference1 中未证明的 `$nexus-workflow 调研` 全链路、在线检索审批后最终报告、16 轴未彻底证明、多轮自动测判改等纳入需求。",
+      "required_entrypoint_or_chain": "reference1_unresolved_proof_gaps",
+      "implementation_location": "scripts/lab/init_monitor_multi_agent_run.py, docs/lab/monitor_multi_agent_contract.md",
+      "verification_or_observation": "agent task prompt includes unresolved proof gaps; contract tests assert representative items",
+      "external_permission_or_manual_action": "online search approval and provider availability are required to prove the full research chain",
+      "status": "done"
+    },
+    {
+      "id": "L07",
+      "user_goal": "所有样例和结构化测试都必须覆盖 16 个问题轴，不能一个样例只测一个问题。",
+      "required_entrypoint_or_chain": "problem matrix plus structured and real project cases",
+      "implementation_location": "scripts/lab/nexus_problem_matrix.json, scripts/lab/nexus_lab_cases.json, scripts/lab/nexus_real_project_cases.json",
+      "verification_or_observation": "build_nexus_lab_project.py problem_matrix_coverage_policy check",
+      "external_permission_or_manual_action": "none for structural check; real external actions remain gated",
+      "status": "done"
+    },
+    {
+      "id": "L08",
+      "user_goal": "Skill Replay 必须记录 prompt-level `$nexus-workflow` 输入链路，不能只用 CLI 代替真实 skill 交互。",
+      "required_entrypoint_or_chain": "skill_replay agent role and run_nexus_skill_replay.py evidence",
+      "implementation_location": "docs/lab/monitor_agent_roles.json, scripts/lab/run_nexus_skill_replay.py",
+      "verification_or_observation": "tests/test_nexus_skill_replay_full_chain.py and dry-run command summary",
+      "external_permission_or_manual_action": "real Codex-thread replay can be blocked if monitor-level message injection is unavailable",
+      "status": "done"
+    },
+    {
+      "id": "L09",
+      "user_goal": "Verix 必须作为独立审计者读取同一初始意图和 Nexus 产物，再把修改要求传给修改 agent。",
+      "required_entrypoint_or_chain": "verix_audit agent role",
+      "implementation_location": "docs/lab/monitor_agent_roles.json, scripts/lab/run_nexus_verix_orchestrator.py",
+      "verification_or_observation": "role contract requires independent verdict and evidence-linked Nexus changes",
+      "external_permission_or_manual_action": "real Verix provider execution may require configured provider credentials",
+      "status": "done"
+    },
+    {
+      "id": "L10",
+      "user_goal": "启动后的真实运行要证明 `$nexus-workflow 调研` 在线检索审批后能继续同一 run 并产出高质量最终报告。",
+      "required_entrypoint_or_chain": "same-run online-search approval continuation through nexus-workflow",
+      "implementation_location": "nexus workflow runtime plus monitor recovery protocol",
+      "verification_or_observation": "not yet observed in the current monitor run",
+      "external_permission_or_manual_action": "requires online-search approval and real provider availability",
+      "status": "not_started"
+    },
+    {
+      "id": "L11",
+      "user_goal": "启动后的真实运行要证明复杂项目意图理解质量接近 feeler 手工调出来的版本。",
+      "required_entrypoint_or_chain": "Verix audit plus real project case comparison",
+      "implementation_location": "real project case registry and Verix audit artifacts",
+      "verification_or_observation": "not yet observed in the current monitor run",
+      "external_permission_or_manual_action": "requires real multi-agent run outputs",
+      "status": "not_started"
+    },
+    {
+      "id": "L12",
+      "user_goal": "外部副作用如 GitHub public/private、Feishu、publish、push 必须审计和授权，不能静默执行。",
+      "required_entrypoint_or_chain": "external_side_effects authorization-gated",
+      "implementation_location": "scripts/lab/init_monitor_multi_agent_run.py, scripts/lab/nexus_real_project_cases.json",
+      "verification_or_observation": "dry-run summaries record refused external side-effect steps",
+      "external_permission_or_manual_action": "explicit user authorization required before real side effects",
+      "status": "blocked"
+    },
+    {
+      "id": "L13",
+      "user_goal": "monitor run 初始化时必须生成持久 problem_backlog / issue_memory artifact，集中记录用户要求、16 轴矩阵路径、上一轮未解决项、当前轮新增要求，状态只用 done/failed/blocked/not_started。",
+      "required_entrypoint_or_chain": "scripts/lab/init_monitor_multi_agent_run.py --init-run",
+      "implementation_location": "scripts/lab/init_monitor_multi_agent_run.py, docs/lab/monitor_agent_state.schema.json",
+      "verification_or_observation": "tests/test_monitor_multi_agent_launch.py asserts problem_backlog artifact, matrix path, unresolved items, current requirements, and allowed statuses",
+      "external_permission_or_manual_action": "none",
+      "status": "done"
+    },
+    {
+      "id": "L14",
+      "user_goal": "monitor_state 和每个 agent task prompt 必须引用统一问题源，并要求 agent 先读它，避免用户每轮重新解释。",
+      "required_entrypoint_or_chain": "monitor_state problem_backlog plus generated agent_tasks/*.md",
+      "implementation_location": "scripts/lab/init_monitor_multi_agent_run.py, scripts/lab/update_monitor_multi_agent_run.py",
+      "verification_or_observation": "tests/test_monitor_multi_agent_launch.py and tests/test_monitor_multi_agent_update.py inspect generated prompts and migrated prompts",
+      "external_permission_or_manual_action": "none",
+      "status": "done"
+    },
+    {
+      "id": "L15",
+      "user_goal": "agent artifact merge 必须识别 source_consumption 字段；缺失时在 monitor_state 标出并不能假装完成。",
+      "required_entrypoint_or_chain": "scripts/lab/merge_monitor_agent_artifacts.py --state monitor_state.json",
+      "implementation_location": "scripts/lab/merge_monitor_agent_artifacts.py",
+      "verification_or_observation": "tests/test_monitor_artifact_merge.py asserts missing source_consumption is recorded and terminal success is blocked until present",
+      "external_permission_or_manual_action": "none",
+      "status": "done"
+    }
+  ]
+}
